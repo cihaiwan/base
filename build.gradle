@@ -1,0 +1,39 @@
+apply plugin :'java'
+import java.net.*;  
+  def macadd() {
+         InetAddress ia=InetAddress.getLocalHost();
+         byte[] mac = NetworkInterface.getByInetAddress(ia).getHardwareAddress();  
+           
+         //下面代码是把mac地址拼装成String  
+         StringBuffer sb = new StringBuffer();  
+           
+         for(int i=0;i<mac.length;i++){  
+             if(i!=0){  
+                 sb.append("-");  
+             }  
+             //mac[i] & 0xFF 是为了把byte转化为正整数  
+             String s = Integer.toHexString(mac[i] & 0xFF);  
+             sb.append(s.length()==1?0+s:s);  
+         }  
+	return sb.toString().toUpperCase();   
+}
+def my=macadd()
+def url=''
+if(my=="44-37-E6-CD-25-21"){
+	url='E:\\Users\\Administrator\\Workspaces\\MyEclipse 10\\lqspro_new\\WebRoot\\WEB-INF\\lib\\'
+}else if(my=="50-7B-9D-9E-91-C2"){
+	url='D:\\Users\\Administrator\\Workspaces\\MyEclipse 10\\lqspro_new\\WebRoot\\WEB-INF\\lib\\'
+}
+
+println url
+repositories{
+	mavenCentral()
+}
+dependencies{
+	compile group: 'org.hibernate', name: 'hibernate-core', version: '4.3.11.Final'
+}
+
+task copyJars(type: Copy) {
+  from configurations.runtime
+  into "$url"
+}
